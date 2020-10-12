@@ -1,0 +1,24 @@
+{
+    "name": "beebots/magento2-brute-bouncer",
+    "description": "Brute Force Protection Module for Magento 2",
+    "require": {
+        "php": "^7.0",
+        "magento/module-cron": "*",
+    },
+    "type": "magento2-module",
+    "version": "0.1.0",
+    "license": "MIT",
+    "support": {
+        "docs": "https://github.com/beebots/magento2-address-autocomplete",
+        "issues": "https://github.com/beebots/magento2-address-autocomplete/issues",
+        "source": "https://github.com/beebots/magento2-address-autocomplete"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "BeeBots\\BruteBouncer\\": ""
+        }
+    }
+}
