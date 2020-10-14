@@ -1,0 +1,19 @@
+{
+    "beebots_brute_bouncer_log": {
+        "column": {
+            "id": true,
+            "ip_address": true,
+            "resource_key": true,
+            "request_count": true,
+            "first_request_at": true,
+            "locked_at": true
+        },
+        "index": {
+            "BEEBOTS_BRUTE_BOUNCER_LOG_IP_ADDRESS_RESOURCE_KEY": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "BEEBOTS_BRUTE_BOUNCER_LOG_RESOURCE_KEY_IP_ADDRESS": true
+        }
+    }
+}

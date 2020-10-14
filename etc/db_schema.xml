@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="beebots_brute_bouncer_log" resource="default" engine="innodb" comment="Log for rate limiting requests">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Id"/>
+        <column xsi:type="varchar" name="ip_address" nullable="false" length="64" comment="IP Address"/>
+        <column xsi:type="varchar" name="resource_key" nullable="false" length="256" comment="Resource Key"/>
+        <column xsi:type="smallint" name="request_count"
+                nullable="false"
+                padding="5"
+                unsigned="true"
+                comment="Request Count"
+                default="0"/>
+
+        <column xsi:type="timestamp" name="first_request_at"
+                on_update="false"
+                nullable="false"
+                default="CURRENT_TIMESTAMP"
+                comment="Time of the first request"/>
+
+        <column xsi:type="timestamp" name="locked_at" nullable="true" comment="Time the lock is placed"/>
+        <index referenceId="BEEBOTS_BRUTE_BOUNCER_LOG_IP_ADDRESS_RESOURCE_KEY" indexType="btree">
+            <column name="ip_address"/>
+            <column name="resource_key"/>
+        </index>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="BEEBOTS_BRUTE_BOUNCER_LOG_RESOURCE_KEY_IP_ADDRESS">
+            <column name="resource_key"/>
+            <column name="ip_address"/>
+        </constraint>
+    </table>
+</schema>
