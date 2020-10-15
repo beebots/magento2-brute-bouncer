@@ -4,8 +4,11 @@ namespace BeeBots\BruteBouncer\Model;
 
 use BeeBots\BruteBouncer\Api\Data\LogInterface;
 use BeeBots\BruteBouncer\Api\LogRepositoryInterface;
-use BeeBots\BruteBouncer\Model\LogFactory;
+use BeeBots\BruteBouncer\Model\ResourceModel\Log as LogResourceModel;
 use BeeBots\BruteBouncer\Model\ResourceModel\Log\CollectionFactory;
+use Exception;
+use Magento\Framework\Exception\AlreadyExistsException;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class LogRepository
@@ -17,21 +20,27 @@ class LogRepository implements LogRepositoryInterface
     /** @var CollectionFactory */
     private $collectionFactory;
 
-    /** @var \BeeBots\BruteBouncer\Model\LogFactory */
-    private $logFactory;
+    /** @var LogResourceModel */
+    private $logResourceModel;
+
+    /** @var LoggerInterface */
+    private $logger;
 
     /**
      * AccessManager constructor.
      *
      * @param CollectionFactory $collectionFactory
-     * @param LogFactory $logFactory
+     * @param LogResourceModel $logResourceModel
+     * @param LoggerInterface $logger
      */
     public function __construct(
         CollectionFactory $collectionFactory,
-        LogFactory $logFactory
+        LogResourceModel $logResourceModel,
+        LoggerInterface $logger
     ) {
         $this->collectionFactory = $collectionFactory;
-        $this->logFactory = $logFactory;
+        $this->logResourceModel = $logResourceModel;
+        $this->logger = $logger;
     }
 
     /**
@@ -40,33 +49,44 @@ class LogRepository implements LogRepositoryInterface
      * @param string $ipAddress
      * @param string $resourceKey
      *
-     * @return LogInterface|null
+     * @return mixed
      */
-    public function getByIpAndResource(string $ipAddress, string $resourceKey): ?LogInterface
+    public function getByIpAndResource(string $ipAddress, string $resourceKey)
     {
-        /** @var ResourceModel\Log\Collection $logCollection */
-        $logCollection = $this->collectionFactory->create();
-        return $logCollection->addFieldToFilter(LogInterface::ID_FIELD, $ipAddress)
+        return $this->collectionFactory->create()
+            ->addFieldToFilter(LogInterface::ID_FIELD, $ipAddress)
             ->addFieldToFilter(LogInterface::RESOURCE_KEY_FIELD, $resourceKey)
             ->getFirstItem();
     }
 
     /**
-     * Function: getOrCreateByIpAndResource
+     * Function: save
      *
-     * @param string $ipAddress
-     * @param string $resourceKey
+     * @param LogInterface $log
      *
      * @return LogInterface
      */
-    public function getOrCreateByIpAndResource(string $ipAddress, string $resourceKey): LogInterface
+    public function save(LogInterface $log): LogInterface
     {
-        $log = $this->getByIpAndResource($ipAddress, $resourceKey);
-        if (! $log) {
-            /** @var LogInterface $log */
-            $log = $this->logFactory->create();
-            $log->setId($ipAddress);
-            $log->setResourceKey($resourceKey);
+        try {
+            /** @noinspection PhpParamsInspection */
+            $log = $this->logResourceModel->save($log);
+        } catch (AlreadyExistsException $e) {
+            $this->logger->error(
+                "AlreadyExistsException while saving BruteBouncer log with "
+                    . "ip_address: {$log->getIpAddress()} "
+                    . "and resource_key: {$log->getResourceKey()}",
+                [ 'exception' => $e ]
+            );
+        } catch (Exception $e) {
+            $this->logger->error(
+                "Exception while saving BruteBouncer log with "
+                    . "ip_address: {$log->getIpAddress()} and "
+                    . "resource_key: {$log->getResourceKey()}",
+                [ 'exception' => $e ]
+            );
         }
+
+        return $log;
     }
 }

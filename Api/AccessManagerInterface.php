@@ -15,14 +15,4 @@ interface AccessManagerInterface
      * @return bool
      */
     public function attemptAccess(string $ipAddress, string $resourceKey): bool;
-
-    /**
-     * Don't record and access attempt, only check if access is allowed
-     *
-     * @param string $ipAddress
-     * @param string $resourceKey
-     *
-     * @return bool
-     */
-    public function checkAccess(string $ipAddress, string $resourceKey): bool;
 }

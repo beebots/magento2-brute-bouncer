@@ -11,17 +11,16 @@ interface LogRepositoryInterface
      * @param string $ipAddress
      * @param string $resourceKey
      *
-     * @return LogInterface|null
+     * @return mixed
      */
-    public function getByIpAndResource(string $ipAddress, string $resourceKey): ?LogInterface;
+    public function getByIpAndResource(string $ipAddress, string $resourceKey);
 
     /**
-     * Function: getOrCreateByIpAndResource
+     * Function: save
      *
-     * @param string $ipAddress
-     * @param string $resourceKey
+     * @param LogInterface $log
      *
      * @return LogInterface
      */
-    public function getOrCreateByIpAndResource(string $ipAddress, string $resourceKey): LogInterface;
+    public function save(LogInterface $log): LogInterface;
 }

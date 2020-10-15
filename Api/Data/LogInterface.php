@@ -2,6 +2,8 @@
 
 namespace BeeBots\BruteBouncer\Api\Data;
 
+use Magento\Tests\NamingConvention\true\mixed;
+
 /**
  * Interface LogInterface
  *
@@ -19,9 +21,9 @@ interface LogInterface
     /**
      * Function: getId
      *
-     * @return int|null
+     * @return mixed`
      */
-    public function getId(): ?int;
+    public function getId();
 
     /**
      * Function: getIpAddress
@@ -40,30 +42,32 @@ interface LogInterface
     /**
      * Function: getRequestCount
      *
-     * @return int
+     * @return mixed
      */
-    public function getRequestCount(): int;
+    public function getRequestCount();
 
     /**
      * Function: getFirstRequestAt
      *
-     * @return string
+     * @return mixed
      */
-    public function getFirstRequestAt(): string;
+    public function getFirstRequestAt();
 
     /**
      * Function: getLockedAt
      *
-     * @return string
+     * @return mixed
      */
-    public function getLockedAt(): string;
+    public function getLockedAt();
 
     /**
      * Function: setId
      *
-     * @return LogInterface
+     * @param mixed $value
+     *
+     * @return mixed
      */
-    public function setId(): LogInterface;
+    public function setId(mixed $value);
 
     /**
      * Function: setIpAddress
@@ -95,16 +99,18 @@ interface LogInterface
     /**
      * Function: setFirstRequestAt
      *
-     * @param string $firstRequestAt
+     * @param int|null $firstRequestAt
      *
      * @return LogInterface
      */
-    public function setFirstRequestAt(string $firstRequestAt): LogInterface;
+    public function setFirstRequestAt(?int $firstRequestAt): LogInterface;
 
     /**
      * Function: setLockedAt
      *
+     * @param int|null $lockedAt
+     *
      * @return LogInterface
      */
-    public function setLockedAt(string $lockedAt): LogInterface;
+    public function setLockedAt(?int $lockedAt): LogInterface;
 }

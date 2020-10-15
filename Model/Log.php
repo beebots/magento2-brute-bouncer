@@ -67,9 +67,9 @@ class Log extends AbstractModel implements
     /**
      * Function: getRequestCount
      *
-     * @return int
+     * @return mixed
      */
-    public function getRequestCount(): int
+    public function getRequestCount()
     {
         return (int)$this->getData(LogInterface::REQUEST_COUNT_FIELD);
     }
@@ -79,7 +79,7 @@ class Log extends AbstractModel implements
      *
      * @return string
      */
-    public function getFirstRequestAt(): string
+    public function getFirstRequestAt()
     {
         return $this->getData(LogInterface::FIRST_REQUEST_AT_FIELD);
     }
@@ -87,9 +87,9 @@ class Log extends AbstractModel implements
     /**
      * Function: getLockedAt
      *
-     * @return string
+     * @return mixed
      */
-    public function getLockedAt(): string
+    public function getLockedAt()
     {
         return $this->getData(LogInterface::LOCKED_AT_FIELD);
     }
@@ -133,11 +133,11 @@ class Log extends AbstractModel implements
     /**
      * Function: setFirstRequestAt
      *
-     * @param string $firstRequestAt
+     * @param int|null $firstRequestAt
      *
      * @return LogInterface
      */
-    public function setFirstRequestAt(string $firstRequestAt): LogInterface
+    public function setFirstRequestAt(?int $firstRequestAt): LogInterface
     {
         return $this->setData(LogInterface::FIRST_REQUEST_AT_FIELD, $firstRequestAt);
     }
@@ -145,11 +145,11 @@ class Log extends AbstractModel implements
     /**
      * Function: setLockedAt
      *
-     * @param string $lockedAt
+     * @param int|null $lockedAt
      *
      * @return LogInterface
      */
-    public function setLockedAt(string $lockedAt): LogInterface
+    public function setLockedAt(?int $lockedAt): LogInterface
     {
         return $this->setData(LogInterface::LOCKED_AT_FIELD, $lockedAt);
     }
