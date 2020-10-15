@@ -17,20 +17,14 @@ use Psr\Log\LoggerInterface;
  */
 class AccessManager implements AccessManagerInterface
 {
+    /** @var Config */
+    private $config;
+
     /** @var LogRepositoryInterface */
     private $logRepository;
 
     /** @var LogFactory */
     private $logFactory;
-
-    /** @var int */
-    private $attemptWindowInMinutes = 5;
-
-    /** @var int */
-    private $attemptLimit = 5;
-
-    /** @var int */
-    private $lockDurationInMinutes = 5;
 
     /** @var LoggerInterface */
     private $logger;
@@ -38,15 +32,18 @@ class AccessManager implements AccessManagerInterface
     /**
      * AccessManager constructor.
      *
+     * @param Config $config
      * @param LogRepositoryInterface $logRepository
      * @param LogFactory $logFactory
      * @param LoggerInterface $logger
      */
     public function __construct(
+        Config $config,
         LogRepositoryInterface $logRepository,
         LogFactory $logFactory,
         LoggerInterface $logger
     ) {
+        $this->config = $config;
         $this->logRepository = $logRepository;
         $this->logFactory = $logFactory;
         $this->logger = $logger;
@@ -111,7 +108,8 @@ class AccessManager implements AccessManagerInterface
 
         try {
             $firstRequestAt = new DateTime($log->getFirstRequestAt());
-            $windowInterval = new DateInterval('PT' . $this->attemptWindowInMinutes . 'M');
+            $attemptWindowInMinutes = $this->config->getAttemptWindowMinutes();
+            $windowInterval = new DateInterval("PT{$attemptWindowInMinutes}M");
             // If the window has passed reset it
             if ($firstRequestAt->add($windowInterval) < $now) {
                 $log->setFirstRequestAt($now->getTimestamp());
@@ -129,7 +127,8 @@ class AccessManager implements AccessManagerInterface
      */
     private function applyLockingRules(LogInterface $log): void
     {
-        if ($log->getRequestCount() <= $this->attemptLimit) {
+        $attemptLimit = $this->config->getAttemptLimit();
+        if ($log->getRequestCount() <= $attemptLimit) {
             $log->setLockedAt(null);
             return;
         }
@@ -155,7 +154,8 @@ class AccessManager implements AccessManagerInterface
         try {
             $lockedAt = new DateTime();
             $lockedAt->setTimeStamp((int)$lockedAtTimeStamp);
-            $lockDurationInterval = new DateInterval('PT' . $this->lockDurationInMinutes . 'M');
+            $lockoutDuration = $this->config->getLockoutMinutes();
+            $lockDurationInterval = new DateInterval("PT{$lockoutDuration}M");
             $lockedUntil = $lockedAt->add($lockDurationInterval);
 
             $now = new DateTime();

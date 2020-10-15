@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <beebots>
+            <brute_bouncer>
+                <enabled>0</enabled>
+                <attempt_limit>5</attempt_limit>
+                <attempt_window_minutes>5</attempt_window_minutes>
+                <lockout_minutes>5</lockout_minutes>
+            </brute_bouncer>
+        </beebots>
+    </default>
+</config>
