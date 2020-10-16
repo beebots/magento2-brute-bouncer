@@ -20,12 +20,16 @@
                     <config_path>beebots/brute_bouncer/attempt_limit</config_path>
                 </field>
                 <field id="attempt_window_minutes" translate="label" sortOrder="3" type="text" showInDefault="1" showInStore="0" showInWebsite="0" canRestore="0">
-                    <label>Attempt Window in Minutes</label>
+                    <label>Attempt Window In Minutes</label>
                     <config_path>beebots/brute_bouncer/attempt_window_minutes</config_path>
                 </field>
                 <field id="lockout_minutes" translate="label" sortOrder="4" type="text" showInDefault="1" showInStore="0" showInWebsite="0" canRestore="0">
-                    <label>Lockout time in Minutes</label>
+                    <label>Lockout Time In Minutes</label>
                     <config_path>beebots/brute_bouncer/lockout_minutes</config_path>
+                </field>
+                <field id="log_days" translate="label" sortOrder="5" type="text" showInDefault="1" showInStore="0" showInWebsite="0" canRestore="0">
+                    <label>Clear Attempts Older Than X Days</label>
+                    <config_path>beebots/brute_bouncer/log_days</config_path>
                 </field>
             </group>
         </section>

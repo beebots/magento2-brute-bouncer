@@ -63,4 +63,9 @@ class Config
     {
         return (int) $this->scopeConfig->getValue('beebots/brute_bouncer/lockout_minutes');
     }
+
+    public function getLogLifetimeDays(): int
+    {
+        return (int) $this->scopeConfig->getValue('beebots/brute_bouncer/log_days');
+    }
 }

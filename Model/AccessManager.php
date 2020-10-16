@@ -59,6 +59,10 @@ class AccessManager implements AccessManagerInterface
      */
     public function attemptAccess(string $ipAddress, string $resourceKey): bool
     {
+        if (! $this->config->isEnabled()) {
+            return true;
+        }
+
         $log = $this->getOrCreateLog($ipAddress, $resourceKey);
         if ($this->isLocked($log)) {
             return false;

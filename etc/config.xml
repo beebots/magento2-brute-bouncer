@@ -7,6 +7,7 @@
                 <attempt_limit>5</attempt_limit>
                 <attempt_window_minutes>5</attempt_window_minutes>
                 <lockout_minutes>5</lockout_minutes>
+                <log_days>2</log_days>
             </brute_bouncer>
         </beebots>
     </default>
