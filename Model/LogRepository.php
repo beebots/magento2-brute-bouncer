@@ -6,8 +6,12 @@ use BeeBots\BruteBouncer\Api\Data\LogInterface;
 use BeeBots\BruteBouncer\Api\LogRepositoryInterface;
 use BeeBots\BruteBouncer\Model\ResourceModel\Log as LogResourceModel;
 use BeeBots\BruteBouncer\Model\ResourceModel\Log\CollectionFactory;
+use DateTime;
+use Dotdigitalgroup\Email\Model\DateInterval;
 use Exception;
 use Magento\Framework\Exception\AlreadyExistsException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Stdlib\DateTime\DateTime as CoreDateTime;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -23,24 +27,36 @@ class LogRepository implements LogRepositoryInterface
     /** @var LogResourceModel */
     private $logResourceModel;
 
+    /** @var Config */
+    private $config;
+
     /** @var LoggerInterface */
     private $logger;
+
+    /** @var CoreDateTime */
+    private $coreDate;
 
     /**
      * AccessManager constructor.
      *
      * @param CollectionFactory $collectionFactory
      * @param LogResourceModel $logResourceModel
+     * @param Config $config
+     * @param CoreDateTime $coreDate
      * @param LoggerInterface $logger
      */
     public function __construct(
         CollectionFactory $collectionFactory,
         LogResourceModel $logResourceModel,
+        Config $config,
+        CoreDateTime $coreDate,
         LoggerInterface $logger
     ) {
         $this->collectionFactory = $collectionFactory;
         $this->logResourceModel = $logResourceModel;
+        $this->config = $config;
         $this->logger = $logger;
+        $this->coreDate = $coreDate;
     }
 
     /**
@@ -88,5 +104,23 @@ class LogRepository implements LogRepositoryInterface
         }
 
         return $log;
+    }
+
+    /**
+     * Function: deleteOldLogs
+     *
+     * @throws LocalizedException
+     */
+    public function deleteOldLogs(): void
+    {
+        $logLifetimeDays = $this->config->getLogLifetimeDays();
+        $olderThan = new DateTime();
+        $olderThan->sub(new DateInterval("P{$logLifetimeDays}D"));
+        $olderThanDateString = $this->coreDate->gmtDate(null, $olderThan);
+
+        $this->logResourceModel->getConnection()->delete(
+            $this->logResourceModel->getMainTable(),
+            [ LogInterface::FIRST_REQUEST_AT_FIELD . ' < ?' => $olderThanDateString]
+        );
     }
 }

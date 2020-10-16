@@ -23,4 +23,9 @@ interface LogRepositoryInterface
      * @return LogInterface
      */
     public function save(LogInterface $log): LogInterface;
+
+    /**
+     * Function: deleteOldLogs
+     */
+    public function deleteOldLogs(): void;
 }

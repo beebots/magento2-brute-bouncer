@@ -2,6 +2,7 @@
 
 namespace BeeBots\BruteBouncer\Test\Unit;
 
+use BeeBots\BruteBouncer\Model\Config;
 use BeeBots\BruteBouncer\Model\Log;
 use BeeBots\BruteBouncer\Model\LogRepository;
 use BeeBots\BruteBouncer\Model\ResourceModel\Log\Collection;
@@ -21,12 +22,16 @@ class LogRepositoryTest extends TestCase
     /** @var Collection|Mockery\LegacyMockInterface|Mockery\MockInterface */
     private $logCollectionMock;
 
+    /** @var Config|Mockery\LegacyMockInterface|Mockery\MockInterface */
+    private $configMock;
+
     protected function setUp()
     {
         $this->objectManager = new ObjectManager($this);
 
         $this->logCollectionFactoryMock = Mockery::mock(CollectionFactory::class);
         $this->logCollectionMock = Mockery::mock(Collection::class);
+        $this->configMock = Mockery::mock(Config::class);
 
         parent::setUp();
     }

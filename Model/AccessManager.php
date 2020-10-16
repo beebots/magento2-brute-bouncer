@@ -114,8 +114,9 @@ class AccessManager implements AccessManagerInterface
             $firstRequestAt = new DateTime($log->getFirstRequestAt());
             $attemptWindowInMinutes = $this->config->getAttemptWindowMinutes();
             $windowInterval = new DateInterval("PT{$attemptWindowInMinutes}M");
+            $endOfTheWindow = $firstRequestAt->add($windowInterval);
             // If the window has passed reset it
-            if ($firstRequestAt->add($windowInterval) < $now) {
+            if ($endOfTheWindow < $now) {
                 $log->setFirstRequestAt($now->getTimestamp());
                 $log->setRequestCount(1);
             }

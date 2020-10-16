@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="BeeBots\BruteBouncer\Api\Data\LogInterface"
+                type="BeeBots\BruteBouncer\Model\Log"/>
+    <preference for="BeeBots\BruteBouncer\Api\AccessManagerInterface"
+                type="BeeBots\BruteBouncer\Model\AccessManager"/>
+    <preference for="BeeBots\BruteBouncer\Api\LogRepositoryInterface"
+                type="BeeBots\BruteBouncer\Model\LogRepository"/>
+</config>
