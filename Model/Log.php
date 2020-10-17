@@ -77,7 +77,7 @@ class Log extends AbstractModel implements
     /**
      * Function: getFirstRequestAt
      *
-     * @return string
+     * @return mixed
      */
     public function getFirstRequestAt()
     {
@@ -133,11 +133,11 @@ class Log extends AbstractModel implements
     /**
      * Function: setFirstRequestAt
      *
-     * @param int|null $firstRequestAt
+     * @param mixed $firstRequestAt
      *
      * @return LogInterface
      */
-    public function setFirstRequestAt(?int $firstRequestAt): LogInterface
+    public function setFirstRequestAt($firstRequestAt): LogInterface
     {
         return $this->setData(LogInterface::FIRST_REQUEST_AT_FIELD, $firstRequestAt);
     }
@@ -145,11 +145,11 @@ class Log extends AbstractModel implements
     /**
      * Function: setLockedAt
      *
-     * @param int|null $lockedAt
+     * @param mixed $lockedAt
      *
      * @return LogInterface
      */
-    public function setLockedAt(?int $lockedAt): LogInterface
+    public function setLockedAt($lockedAt): LogInterface
     {
         return $this->setData(LogInterface::LOCKED_AT_FIELD, $lockedAt);
     }

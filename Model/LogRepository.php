@@ -69,10 +69,11 @@ class LogRepository implements LogRepositoryInterface
      */
     public function getByIpAndResource(string $ipAddress, string $resourceKey)
     {
-        return $this->collectionFactory->create()
-            ->addFieldToFilter(LogInterface::ID_FIELD, $ipAddress)
+        $logCollection = $this->collectionFactory->create();
+        $log = $logCollection->addFieldToFilter(LogInterface::IP_ADDRESS_FIELD, $ipAddress)
             ->addFieldToFilter(LogInterface::RESOURCE_KEY_FIELD, $resourceKey)
             ->getFirstItem();
+        return $log;
     }
 
     /**
@@ -86,7 +87,7 @@ class LogRepository implements LogRepositoryInterface
     {
         try {
             /** @noinspection PhpParamsInspection */
-            $log = $this->logResourceModel->save($log);
+            $this->logResourceModel->save($log);
         } catch (AlreadyExistsException $e) {
             $this->logger->error(
                 "AlreadyExistsException while saving BruteBouncer log with "

@@ -8,6 +8,7 @@ use BeeBots\BruteBouncer\Api\LogRepositoryInterface;
 use DateInterval;
 use DateTime;
 use Exception;
+use Magento\Framework\Stdlib\DateTime\DateTime as CoreDateTime;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -29,24 +30,30 @@ class AccessManager implements AccessManagerInterface
     /** @var LoggerInterface */
     private $logger;
 
+    /** @var CoreDateTime */
+    private $coreDateTime;
+
     /**
      * AccessManager constructor.
      *
      * @param Config $config
      * @param LogRepositoryInterface $logRepository
      * @param LogFactory $logFactory
+     * @param CoreDateTime $coreDateTime
      * @param LoggerInterface $logger
      */
     public function __construct(
         Config $config,
         LogRepositoryInterface $logRepository,
         LogFactory $logFactory,
+        CoreDateTime $coreDateTime,
         LoggerInterface $logger
     ) {
         $this->config = $config;
         $this->logRepository = $logRepository;
         $this->logFactory = $logFactory;
         $this->logger = $logger;
+        $this->coreDateTime = $coreDateTime;
     }
 
     /**
@@ -88,13 +95,14 @@ class AccessManager implements AccessManagerInterface
      */
     private function getOrCreateLog(string $ipAddress, string $resourceKey)
     {
-        return $this->logRepository->getByIpAndResource($ipAddress, $resourceKey)
-            ?? $this->logFactory->create(
-                [
-                    LogInterface::IP_ADDRESS_FIELD => $ipAddress,
-                    Loginterface::RESOURCE_KEY_FIELD => $resourceKey
-                ]
-            );
+        $log = $this->logRepository->getByIpAndResource($ipAddress, $resourceKey);
+        if (! $log
+            || ! $log->getId()) {
+            $log = $this->logFactory->create()
+                ->setIpAddress($ipAddress)
+                ->setResourceKey($resourceKey);
+        }
+        return $log;
     }
 
     /**
@@ -106,7 +114,7 @@ class AccessManager implements AccessManagerInterface
     {
         $now = new DateTime();
         if (! $log->getFirstRequestAt()) {
-            $log->setFirstRequestAt($now->getTimestamp());
+            $log->setFirstRequestAt($this->coreDateTime->gmtDate());
             return;
         }
 
@@ -117,7 +125,7 @@ class AccessManager implements AccessManagerInterface
             $endOfTheWindow = $firstRequestAt->add($windowInterval);
             // If the window has passed reset it
             if ($endOfTheWindow < $now) {
-                $log->setFirstRequestAt($now->getTimestamp());
+                $log->setFirstRequestAt($this->coreDateTime->gmtDate());
                 $log->setRequestCount(1);
             }
         } catch (Exception $e) {
@@ -138,8 +146,7 @@ class AccessManager implements AccessManagerInterface
             return;
         }
 
-        $now = new DateTime();
-        $log->setLockedAt($now->getTimestamp());
+        $log->setLockedAt($this->coreDateTime->gmtDate());
     }
 
     /**
@@ -151,14 +158,12 @@ class AccessManager implements AccessManagerInterface
      */
     private function isLocked(LogInterface $log)
     {
-        $lockedAtTimeStamp = $log->getLockedAt();
-        if (! $lockedAtTimeStamp) {
+        if (! $log->getLockedAt()) {
             return false;
         }
 
         try {
-            $lockedAt = new DateTime();
-            $lockedAt->setTimeStamp((int)$lockedAtTimeStamp);
+            $lockedAt = new DateTime($log->getLockedAt());
             $lockoutDuration = $this->config->getLockoutMinutes();
             $lockDurationInterval = new DateInterval("PT{$lockoutDuration}M");
             $lockedUntil = $lockedAt->add($lockDurationInterval);
@@ -181,7 +186,7 @@ class AccessManager implements AccessManagerInterface
      */
     private function incrementRequestsCount(LogInterface $log): void
     {
-        $newRequestCount = $log->getRequestCount()
+        $newRequestCount = $log->getRequestCount() !== null
             ? $log->getRequestCount() + 1
             : 0;
 

@@ -99,18 +99,18 @@ interface LogInterface
     /**
      * Function: setFirstRequestAt
      *
-     * @param int|null $firstRequestAt
+     * @param mixed $firstRequestAt
      *
      * @return LogInterface
      */
-    public function setFirstRequestAt(?int $firstRequestAt): LogInterface;
+    public function setFirstRequestAt($firstRequestAt): LogInterface;
 
     /**
      * Function: setLockedAt
      *
-     * @param int|null $lockedAt
+     * @param mixed $lockedAt
      *
      * @return LogInterface
      */
-    public function setLockedAt(?int $lockedAt): LogInterface;
+    public function setLockedAt($lockedAt): LogInterface;
 }
