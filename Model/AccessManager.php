@@ -123,7 +123,7 @@ class AccessManager implements AccessManagerInterface
             $attemptWindowInMinutes = $this->config->getAttemptWindowMinutes();
             $windowInterval = new DateInterval("PT{$attemptWindowInMinutes}M");
             $endOfTheWindow = $firstRequestAt->add($windowInterval);
-            // If the window has passed reset it
+            // If the window has passed reset this request as if it were a new first attempt
             if ($endOfTheWindow < $now) {
                 $log->setFirstRequestAt($this->coreDateTime->gmtDate());
                 $log->setRequestCount(1);
@@ -141,6 +141,7 @@ class AccessManager implements AccessManagerInterface
     private function applyLockingRules(LogInterface $log): void
     {
         $attemptLimit = $this->config->getAttemptLimit();
+        // Clear the lock if under the limit
         if ($log->getRequestCount() <= $attemptLimit) {
             $log->setLockedAt(null);
             return;
