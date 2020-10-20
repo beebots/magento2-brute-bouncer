@@ -15,4 +15,4 @@ Make sure that you use the customer/user's IP address with this module and not t
  
 
 ## License
-[MIT](LICENSE.md)
+[MIT](LICENSE.txt)
