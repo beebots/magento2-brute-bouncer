@@ -2,8 +2,6 @@
 
 namespace BeeBots\BruteBouncer\Api\Data;
 
-use Magento\Tests\NamingConvention\true\mixed;
-
 /**
  * Interface LogInterface
  *
