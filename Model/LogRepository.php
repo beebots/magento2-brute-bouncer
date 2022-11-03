@@ -7,7 +7,7 @@ use BeeBots\BruteBouncer\Api\LogRepositoryInterface;
 use BeeBots\BruteBouncer\Model\ResourceModel\Log as LogResourceModel;
 use BeeBots\BruteBouncer\Model\ResourceModel\Log\CollectionFactory;
 use DateTime;
-use Dotdigitalgroup\Email\Model\DateInterval;
+use DateInterval;
 use Exception;
 use Magento\Framework\Exception\AlreadyExistsException;
 use Magento\Framework\Exception\LocalizedException;
